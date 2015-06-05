@@ -48,7 +48,7 @@ void TM1637::init(void)
   clearDisplay();
 }
 
-void TM1637::writeByte(int8_t wr_data)
+int TM1637::writeByte(int8_t wr_data)
 {
   uint8_t i,count1;
   for(i=0;i<8;i++)        //sent 8bit data
@@ -64,6 +64,8 @@ void TM1637::writeByte(int8_t wr_data)
   digitalWrite(Datapin,HIGH);
   digitalWrite(Clkpin,HIGH);
   pinMode(Datapin,INPUT);
+  
+#if 0  
   while(digitalRead(Datapin))
   {
     count1 +=1;
@@ -76,7 +78,20 @@ void TM1637::writeByte(int8_t wr_data)
     pinMode(Datapin,INPUT);
   }
   pinMode(Datapin,OUTPUT);
+#endif
 
+  bitDelay();
+  uint8_t ack = digitalRead(Datapin);
+  if (ack == 0) 
+  {
+     pinMode(Datapin,OUTPUT);
+     digitalWrite(Datapin,LOW);
+  }
+  bitDelay();
+  pinMode(Datapin,OUTPUT);
+  bitDelay();
+  
+  return ack;
 }
 //send start signal to TM1637
 void TM1637::start(void)
@@ -175,4 +190,8 @@ int8_t TM1637::coding(int8_t DispData)
   if(DispData == 0x7f) DispData = 0x00 + PointData;//The bit digital tube off
   else DispData = TubeTab[DispData] + PointData;
   return DispData;
+}
+void TM1637::bitDelay(void)
+{
+	delayMicroseconds(50);
 }
