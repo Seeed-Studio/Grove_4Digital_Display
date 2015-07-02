@@ -64,21 +64,6 @@ int TM1637::writeByte(int8_t wr_data)
   digitalWrite(Datapin,HIGH);
   digitalWrite(Clkpin,HIGH);
   pinMode(Datapin,INPUT);
-  
-#if 0  
-  while(digitalRead(Datapin))
-  {
-    count1 +=1;
-    if(count1 == 200)//
-    {
-     pinMode(Datapin,OUTPUT);
-     digitalWrite(Datapin,LOW);
-     count1 =0;
-    }
-    pinMode(Datapin,INPUT);
-  }
-  pinMode(Datapin,OUTPUT);
-#endif
 
   bitDelay();
   uint8_t ack = digitalRead(Datapin);
