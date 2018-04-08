@@ -1,0 +1,34 @@
+  
+#######################################
+# Syntax Coloring Map For 
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Cmd_SetData	KEYWORD1
+Cmd_SetAddr	KEYWORD1
+Cmd_DispCtrl	KEYWORD1
+_PointFlag	KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+TM1637	KEYWORD2
+init	KEYWORD2
+writeByte	KEYWORD2
+start	KEYWORD2
+stop	KEYWORD2
+display	KEYWORD2
+display	KEYWORD2
+clearDisplay	KEYWORD2
+set	KEYWORD2
+point	KEYWORD2
+coding	KEYWORD2
+coding	KEYWORD2
+bitDelay	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
