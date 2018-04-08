@@ -14,7 +14,7 @@ Install libraries on Arduino Library Mnager.
 	TimerOne - maintained by Paul Stoffregen
 
 
-For connection guide and more information, please refer to [wiki page](http://www.seeedstudio.com/wiki/Grove_-_4-Digit_Display).
+For connection guide and more information, please refer to [wiki page](http://wiki.seeedstudio.com/Grove-4-Digit_Display/).
 
     
 ----
