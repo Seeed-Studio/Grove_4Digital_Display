@@ -1,18 +1,18 @@
 Grove_4Digital_Display
 --------------------------------
 
-[![Grove_4Digital_Display](http://www.seeedstudio.com/depot/bmz_cache/3/3a9f79323a82950c12fc7e69fa9fab4d.image.530x397.jpg)](http://www.seeedstudio.com/depot/Grove-4Digit-Display-p-1198.html)
+![Grove_4Digital_Display](https://statics3.seeedstudio.com/images/product/4-Digital%20Display.jpg)
+
+[Grove - 4-Digit Display](https://www.seeedstudio.com/Grove-4-Digit-Display-p-1198.html)
 
 4 digit display module is usually a 12 pin module. In this Grove gadget, we utilize a TM1637 to scale down the controlling pins into 2 Grove pins. It only takes 2 digital pins of Arduino or Seeeduino to control the content, even the luminance of this display. For projects that require of alpha-numeric display, this can be a nice choice.
 
-### Usage:
+***Library Requirement***
 
-1. Clone this repo or download as a zip;
-2. Unzip the zip file if you downloaded a zip file;
-3. Copy the directory "DigitalTube" and "TimerOne" into Arduino's libraries directory;
-4. Open Arduino IDE, go to "File"->"Examples"->"DigitalTube"
+Install libraries on Arduino Library Mnager.
 
-Assume that you connected the grove correctly. 
+	TimerOne - maintained by Paul Stoffregen
+
 
 For connection guide and more information, please refer to [wiki page](http://www.seeedstudio.com/wiki/Grove_-_4-Digit_Display).
 
