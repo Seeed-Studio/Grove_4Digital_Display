@@ -1,6 +1,9 @@
 /*
  * TM1637.cpp
  * A library for the 4 digit display
+ * 
+ * TM1637 chip datasheet:
+ * https://www.mcielectronics.cl/website_MCI/static/documents/Datasheet_TM1637.pdf
  *
  * Copyright (c) 2012 seeed technology inc.
  * Website    : www.seeed.cc
@@ -31,16 +34,19 @@
 
 #include "TM1637.h"
 #include <Arduino.h>
-static int8_t TubeTab[] = {0x3f,0x06,0x5b,0x4f,
-                           0x66,0x6d,0x7d,0x07,
-                           0x7f,0x6f,0x77,0x7c,
-                           0x39,0x5e,0x79,0x71};//0~9,A,b,C,d,E,F
-TM1637::TM1637(uint8_t Clk, uint8_t Data)
+
+static int8_t tube_tab[] = {0x3f, 0x06, 0x5b, 0x4f,
+                            0x66, 0x6d, 0x7d, 0x07,
+                            0x7f, 0x6f, 0x77, 0x7c,
+                            0x39, 0x5e, 0x79, 0x71,
+                            0x00, 0x40}; //0~9,A,b,C,d,E,F,CLEAR,-
+
+TM1637::TM1637(uint8_t clk, uint8_t data)
 {
-  Clkpin = Clk;
-  Datapin = Data;
-  pinMode(Clkpin,OUTPUT);
-  pinMode(Datapin,OUTPUT);
+  clkpin = clk;
+  datapin = data;
+  pinMode(clkpin, OUTPUT);
+  pinMode(datapin, OUTPUT);
 }
 
 void TM1637::init(void)
@@ -50,133 +56,175 @@ void TM1637::init(void)
 
 int TM1637::writeByte(int8_t wr_data)
 {
-  uint8_t i,count1;
-  for(i=0;i<8;i++)        //sent 8bit data
+  for (uint8_t i = 0; i < 8; i++) // Sent 8bit data
   {
-    digitalWrite(Clkpin,LOW);
-    if(wr_data & 0x01)digitalWrite(Datapin,HIGH);//LSB first
-    else digitalWrite(Datapin,LOW);
+    digitalWrite(clkpin, LOW);
+
+    if (wr_data & 0x01)
+      digitalWrite(datapin, HIGH); // LSB first
+    else
+      digitalWrite(datapin, LOW);
+
     wr_data >>= 1;
-    digitalWrite(Clkpin,HIGH);
-
+    digitalWrite(clkpin, HIGH);
   }
-  digitalWrite(Clkpin,LOW); //wait for the ACK
-  digitalWrite(Datapin,HIGH);
-  digitalWrite(Clkpin,HIGH);
-  pinMode(Datapin,INPUT);
+
+  digitalWrite(clkpin, LOW); // Wait for the ACK
+  digitalWrite(datapin, HIGH);
+  digitalWrite(clkpin, HIGH);
+  pinMode(datapin, INPUT);
 
   bitDelay();
-  uint8_t ack = digitalRead(Datapin);
-  if (ack == 0) 
+  uint8_t ack = digitalRead(datapin);
+
+  if (ack == 0)
   {
-     pinMode(Datapin,OUTPUT);
-     digitalWrite(Datapin,LOW);
+    pinMode(datapin, OUTPUT);
+    digitalWrite(datapin, LOW);
   }
+
   bitDelay();
-  pinMode(Datapin,OUTPUT);
+  pinMode(datapin, OUTPUT);
   bitDelay();
-  
+
   return ack;
 }
-//send start signal to TM1637
+
+// Send start signal to TM1637 (start = when both pins goes low)
 void TM1637::start(void)
 {
-  digitalWrite(Clkpin,HIGH);//send start signal to TM1637
-  digitalWrite(Datapin,HIGH);
-  digitalWrite(Datapin,LOW);
-  digitalWrite(Clkpin,LOW);
+  digitalWrite(clkpin, HIGH);
+  digitalWrite(datapin, HIGH);
+  digitalWrite(datapin, LOW);
+  digitalWrite(clkpin, LOW);
 }
-//End of transmission
+
+// End of transmission (stop = when both pins goes high)
 void TM1637::stop(void)
 {
-  digitalWrite(Clkpin,LOW);
-  digitalWrite(Datapin,LOW);
-  digitalWrite(Clkpin,HIGH);
-  digitalWrite(Datapin,HIGH);
+  digitalWrite(clkpin, LOW);
+  digitalWrite(datapin, LOW);
+  digitalWrite(clkpin, HIGH);
+  digitalWrite(datapin, HIGH);
 }
-//display function.Write to full-screen.
-void TM1637::display(int8_t DispData[])
+
+// Display function.Write to full-screen.
+void TM1637::display(int8_t disp_data[])
 {
-  int8_t SegData[4];
+  int8_t seg_data[DIGITS];
   uint8_t i;
-  for(i = 0;i < 4;i ++)
-  {
-    SegData[i] = DispData[i];
-  }
-  coding(SegData);
-  start();          //start signal sent to TM1637 from MCU
-  writeByte(ADDR_AUTO);//
-  stop();           //
-  start();          //
-  writeByte(Cmd_SetAddr);//
-  for(i=0;i < 4;i ++)
-  {
-    writeByte(SegData[i]);        //
-  }
-  stop();           //
-  start();          //
-  writeByte(Cmd_DispCtrl);//
-  stop();           //
+
+  for (i = 0; i < DIGITS; i++)
+    seg_data[i] = disp_data[i];
+
+  coding(seg_data);
+  start();              // Start signal sent to TM1637 from MCU
+  writeByte(ADDR_AUTO); // Command1: Set data
+  stop();
+  start();
+  writeByte(cmd_set_addr); // Command2: Set address (automatic address adding)
+
+  for (i = 0; i < DIGITS; i++)
+    writeByte(seg_data[i]); // Transfer display data (8 bits x num_of_digits)
+
+  stop();
+  start();
+  writeByte(cmd_disp_ctrl); // Control display
+  stop();
 }
+
 //******************************************
-void TM1637::display(uint8_t BitAddr,int8_t DispData)
+void TM1637::display(uint8_t bit_addr, int8_t disp_data)
 {
-  int8_t SegData;
-  SegData = coding(DispData);
-  start();          //start signal sent to TM1637 from MCU
-  writeByte(ADDR_FIXED);//
-  stop();           //
-  start();          //
-  writeByte(BitAddr|0xc0);//
-  writeByte(SegData);//
-  stop();            //
-  start();          //
-  writeByte(Cmd_DispCtrl);//
-  stop();           //
+  int8_t seg_data;
+
+  seg_data = coding(disp_data);
+  start();               // Start signal sent to TM1637 from MCU
+  writeByte(ADDR_FIXED); // Command1: Set data
+  stop();
+  start();
+  writeByte(bit_addr | 0xc0); // Command2: Set data (fixed address)
+  writeByte(seg_data);        // Transfer display data 8 bits
+  stop();
+  start();
+  writeByte(cmd_disp_ctrl); // Control display
+  stop();
+}
+
+//--------------------------------------------------------
+
+void TM1637::displayNum(float num, int decimal, bool show_minus)
+{
+  // Displays number with decimal places (no decimal point implementation)
+  // Colon is used instead of decimal point if decimal == 2
+  // Be aware of int size limitations (up to +-2^15 = +-32767)
+
+  int number = abs(num) * pow(10, decimal);
+
+  for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i)
+  {
+    int j = DIGITS - i - 1;
+
+    if (number != 0)
+      display(j, number % 10);
+    else
+      display(j, 16); // Clear digit
+
+    number /= 10;
+  }
+
+  if (show_minus && num < 0)
+    display(0, 17); // Display minus
+
+  if (decimal == 2)
+    point(true);
+  else
+    point(false);
 }
 
 void TM1637::clearDisplay(void)
 {
-  display(0x00,0x7f);
-  display(0x01,0x7f);
-  display(0x02,0x7f);
-  display(0x03,0x7f);
-}
-//To take effect the next time it displays.
-void TM1637::set(uint8_t brightness,uint8_t SetData,uint8_t SetAddr)
-{
-  Cmd_SetData = SetData;
-  Cmd_SetAddr = SetAddr;
-  Cmd_DispCtrl = 0x88 + brightness;//Set the brightness and it takes effect the next time it displays.
+  display(0x00, 0x7f);
+  display(0x01, 0x7f);
+  display(0x02, 0x7f);
+  display(0x03, 0x7f);
 }
 
-//Whether to light the clock point ":".
-//To take effect the next time it displays.
+// To take effect the next time it displays.
+void TM1637::set(uint8_t brightness, uint8_t set_data, uint8_t set_addr)
+{
+  cmd_set_data = set_data;
+  cmd_set_addr = set_addr;
+  //Set the brightness and it takes effect the next time it displays.
+  cmd_disp_ctrl = 0x88 + brightness;
+}
+
+// Whether to light the clock point ":".
+// To take effect the next time it displays.
 void TM1637::point(boolean PointFlag)
 {
   _PointFlag = PointFlag;
 }
-void TM1637::coding(int8_t DispData[])
+
+void TM1637::coding(int8_t disp_data[])
 {
-  uint8_t PointData;
-  if(_PointFlag == POINT_ON)PointData = 0x80;
-  else PointData = 0;
-  for(uint8_t i = 0;i < 4;i ++)
-  {
-    if(DispData[i] == 0x7f)DispData[i] = 0x00;
-    else DispData[i] = TubeTab[DispData[i]] + PointData;
-  }
+  for (uint8_t i = 0; i < DIGITS; i++)
+    disp_data[i] = coding(disp_data[i]);
 }
-int8_t TM1637::coding(int8_t DispData)
+
+int8_t TM1637::coding(int8_t disp_data)
 {
-  uint8_t PointData;
-  if(_PointFlag == POINT_ON)PointData = 0x80;
-  else PointData = 0;
-  if(DispData == 0x7f) DispData = 0x00 + PointData;//The bit digital tube off
-  else DispData = TubeTab[DispData] + PointData;
-  return DispData;
+  if (disp_data == 0x7f)
+    disp_data = 0x00; // Clear digit
+  else
+    disp_data = tube_tab[disp_data];
+
+  disp_data += _PointFlag == POINT_ON ? 0x80 : 0;
+
+  return disp_data;
 }
+
 void TM1637::bitDelay(void)
 {
-	delayMicroseconds(50);
+  delayMicroseconds(50);
 }
