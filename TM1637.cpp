@@ -158,28 +158,32 @@ void TM1637::displayNum(float num, int decimal, bool show_minus)
   // Displays number with decimal places (no decimal point implementation)
   // Colon is used instead of decimal point if decimal == 2
   // Be aware of int size limitations (up to +-2^15 = +-32767)
-
-  int number = abs(num) * pow(10, decimal);
-
-  for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i)
-  {
-    int j = DIGITS - i - 1;
-
-    if (number != 0)
-      display(j, number % 10);
-    else
-      display(j, 16); // Clear digit
-
-    number /= 10;
-  }
-
-  if (show_minus && num < 0)
-    display(0, 17); // Display minus
-
-  if (decimal == 2)
-    point(true);
+  if (num == 0)
+    display(3,0);
   else
-    point(false);
+  {
+    int number = abs(num) * pow(10, decimal);
+
+    for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i)
+    {
+      int j = DIGITS - i - 1;
+
+      if (number != 0)
+        display(j, number % 10);
+      else
+        display(j, 16); // Clear digit
+
+      number /= 10;
+    }
+
+    if (show_minus && num < 0)
+      display(0, 17); // Display minus
+
+    if (decimal == 2)
+      point(true);
+    else
+      point(false);
+    }
 }
 
 void TM1637::clearDisplay(void)
