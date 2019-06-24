@@ -168,7 +168,7 @@ void TM1637::displayNum(float num, int decimal, bool show_minus)
     if (number != 0)
       display(j, number % 10);
     else
-      display(j, 16); // Clear digit
+      display(3, 0); // display 0
 
     number /= 10;
   }
