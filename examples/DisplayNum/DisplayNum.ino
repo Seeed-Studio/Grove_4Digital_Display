@@ -41,7 +41,6 @@ int mult = 1;
 
 void setup()
 {
-  Serial.begin(9600);
   tm1637.init();
   tm1637.set(BRIGHT_TYPICAL);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7;
 
