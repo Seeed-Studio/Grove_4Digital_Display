@@ -27,6 +27,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+/* 
+example Requirement
+
+Install libraries on Arduino Library Mnager.
+
+TimerOne - maintained by Paul Stoffregen
+*/
+
 #include <TimerOne.h>
 #include "TM1637.h"
 #define ON 1

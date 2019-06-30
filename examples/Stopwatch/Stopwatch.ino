@@ -29,6 +29,15 @@
  * THE SOFTWARE.
  */
 
+/* 
+example Requirement
+
+Install libraries on Arduino Library Mnager.
+
+TimerOne - maintained by Paul Stoffregen
+*/
+
+
 #include <EEPROM.h>
 #include <TimerOne.h>
 #include <avr/pgmspace.h>
