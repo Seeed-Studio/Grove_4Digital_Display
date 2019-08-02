@@ -39,7 +39,7 @@ static int8_t tube_tab[] = {0x3f, 0x06, 0x5b, 0x4f,
                             0x66, 0x6d, 0x7d, 0x07,
                             0x7f, 0x6f, 0x77, 0x7c,
                             0x39, 0x5e, 0x79, 0x71,
-                            0x00, 0x40}; //0~9,A,b,C,d,E,F,CLEAR,-
+                            0x40}; //0~9,A,b,C,d,E,F,-
 
 TM1637::TM1637(uint8_t clk, uint8_t data)
 {
@@ -159,7 +159,7 @@ void TM1637::displayNum(float num, int decimal, bool show_minus)
   // Colon is used instead of decimal point if decimal == 2
   // Be aware of int size limitations (up to +-2^15 = +-32767)
 
-  int number = abs(num) * pow(10, decimal);
+  int number = fabs(num) * pow(10, decimal);
 
   for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i)
   {
@@ -168,13 +168,13 @@ void TM1637::displayNum(float num, int decimal, bool show_minus)
     if (number != 0)
       display(j, number % 10);
     else
-      display(3, 0); // display 0
+      display(j, 0x7f); // display nothing
 
     number /= 10;
   }
 
   if (show_minus && num < 0)
-    display(0, 17); // Display minus
+    display(0, 16); // Display '-'
 
   if (decimal == 2)
     point(true);
@@ -216,9 +216,10 @@ int8_t TM1637::coding(int8_t disp_data)
 {
   if (disp_data == 0x7f)
     disp_data = 0x00; // Clear digit
-  else
+  else if (disp_data >= 0 && disp_data < sizeof(tube_tab)/sizeof(*tube_tab))
     disp_data = tube_tab[disp_data];
-
+  else
+    disp_data = 0;
   disp_data += _PointFlag == POINT_ON ? 0x80 : 0;
 
   return disp_data;
