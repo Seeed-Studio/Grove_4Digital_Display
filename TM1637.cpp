@@ -216,7 +216,7 @@ int8_t TM1637::coding(int8_t disp_data)
 {
   if (disp_data == 0x7f)
     disp_data = 0x00; // Clear digit
-  else if (disp_data >= 0 && disp_data < sizeof(tube_tab)/sizeof(*tube_tab))
+  else if (disp_data >= 0 && disp_data < int(sizeof(tube_tab)/sizeof(*tube_tab)))
     disp_data = tube_tab[disp_data];
   else
     disp_data = 0;
