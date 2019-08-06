@@ -46,7 +46,7 @@
 //  --0x08--
 
 namespace {
-  int8 char2segments(char c)
+  uint8_t char2segments(char c)
   {
     switch (c)
     {
