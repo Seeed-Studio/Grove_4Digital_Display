@@ -54,6 +54,26 @@ namespace {
       case '^' : return 0x01; // ¯
       case '-' : return 0x40;
       case '*' : return 0x63; // °
+      case '*' : return 0x63; // °
+      case ' ' : return 0x00; // space
+      case 'A' : return 0x77;
+      case 'b' : return 0x7c;
+      case 'c' : return 0x58;
+      case 'C' : return 0x39;
+      case 'E' : return 0x79;
+      case 'F' : return 0x71;
+      case 'h' : return 0x74;
+      case 'H' : return 0x76;
+      case 'I' : return 0x30;
+      case 'J' : return 0x0e;
+      case 'L' : return 0x38;
+      case 'n' : return 0x54;
+      case 'o' : return 0x5c;
+      case 'P' : return 0x73;
+      case 'q' : return 0x67;
+      case 'u' : return 0x1c;
+      case 'U' : return 0x3e;
+      case 'y' : return 0x72;
     }
     return 0;
   }
