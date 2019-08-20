@@ -54,6 +54,27 @@ namespace {
       case '^' : return 0x01; // ¯
       case '-' : return 0x40;
       case '*' : return 0x63; // °
+      case ' ' : return 0x00; // space
+      case 'A' : return 0x77;
+      case 'b' : return 0x7c;
+      case 'c' : return 0x58;
+      case 'C' : return 0x39;
+      case 'd' : return 0x5e;
+      case 'E' : return 0x79;
+      case 'F' : return 0x71;
+      case 'h' : return 0x74;
+      case 'H' : return 0x76;
+      case 'I' : return 0x30;
+      case 'J' : return 0x0e;
+      case 'L' : return 0x38;
+      case 'n' : return 0x54;
+      case 'N' : return 0x37; // like ∩
+      case 'o' : return 0x5c;
+      case 'P' : return 0x73;
+      case 'q' : return 0x67;
+      case 'u' : return 0x1c;
+      case 'U' : return 0x3e;
+      case 'y' : return 0x66; // =4
     }
     return 0;
   }
@@ -206,6 +227,25 @@ void TM1637::displayNum(float num, int decimal, bool show_minus)
     point(false);
 }
 
+void TM1637::displayStr(char str[], uint16_t loop_delay)
+{
+  for (int i = 0; i < strlen(str); i++) {
+    if (i + 1 > DIGITS) {
+      delay(loop_delay); //loop delay
+      for (int d = 0; d < DIGITS; d++) {
+        display(d, str[d + i + 1 - DIGITS]); //loop display
+      }
+    } else {
+      display(i, str[i]);
+    }
+  }
+
+  // display nothing
+  for (int i = strlen(str); i < DIGITS; i++) {
+    display(i, 0x7f);
+  }
+}
+
 void TM1637::clearDisplay(void)
 {
   display(0x00, 0x7f);
@@ -242,6 +282,8 @@ int8_t TM1637::coding(int8_t disp_data)
     disp_data = 0x00; // Clear digit
   else if (disp_data >= 0 && disp_data < int(sizeof(tube_tab)/sizeof(*tube_tab)))
     disp_data = tube_tab[disp_data];
+  else if ( disp_data >= '0' && disp_data <= '9' )
+    disp_data = tube_tab[int(disp_data)-48]; // char to int (char "0" = ASCII 48)
   else
     disp_data = char2segments(disp_data);
   disp_data += _PointFlag == POINT_ON ? 0x80 : 0;
