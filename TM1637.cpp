@@ -70,6 +70,7 @@ namespace {
             case 'o' : return 0x5c;
             case 'P' : return 0x73;
             case 'q' : return 0x67;
+            case 'r' : return 0x50;
             case 'u' : return 0x1c;
             case 'U' : return 0x3e;
             case 'y' : return 0x66; // =4
