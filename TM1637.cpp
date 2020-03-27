@@ -53,27 +53,32 @@ namespace {
             case '-' : return 0x40;
             case '*' : return 0x63; // °
             case ' ' : return 0x00; // space
-            case 'A' : return 0x77;
-            case 'b' : return 0x7c;
-            case 'c' : return 0x58;
-            case 'C' : return 0x39;
-            case 'd' : return 0x5e;
+            case 'A' : return 0x77; // upper case, instead lower 0x57
+            case 'B' : return 0x7c; // lower case b
+            case 'C' : return 0x39; // upper case, instead lower 0x58
+            case 'D' : return 0x5e; // lower case d
             case 'E' : return 0x79;
             case 'F' : return 0x71;
-            case 'h' : return 0x74;
-            case 'H' : return 0x76;
-            case 'I' : return 0x30;
-            case 'J' : return 0x0e;
+            case 'G' : return 0x35;
+            case 'H' : return 0x76; // upper case, instead lower 0x74
+            case 'I' : return 0x06; // right align, instead left 0x30
+            case 'J' : return 0x1e;
+            case 'K' : return 0x75;
             case 'L' : return 0x38;
-            case 'n' : return 0x54;
-            case 'N' : return 0x37; // like ∩
-            case 'o' : return 0x5c;
+            case 'M' : return 0x37; // twice tall ∩
+            case 'N' : return 0x54; // lower case n
+            case 'O' : return 0x5c; // lower case o
             case 'P' : return 0x73;
-            case 'q' : return 0x67;
-            case 'r' : return 0x50;
-            case 'u' : return 0x1c;
-            case 'U' : return 0x3e;
-            case 'y' : return 0x66; // =4
+            case 'Q' : return 0x67; // lower case q, unconfirmed
+            case 'R' : return 0x50; // lower case r
+            case 'S' : return 0x6d;
+            case 'T' : return 0x78; // lower case t
+            case 'U' : return 0x1c; // lower case u
+            case 'V' : return 0x3e; // twice tall u
+            case 'W' : return 0x2a;
+            case 'X' : return 0x76;               // unconfirmed
+            case 'Y' : return 0x6e; // lower case y
+            case 'Z' : return 0x1b;               // unconfirmed
         }
         return 0;
     }
