@@ -34,6 +34,7 @@
 
 #include "TM1637.h"
 #include <Arduino.h>
+#include <cctype>
 
 //  --0x01--
 // |        |
@@ -47,7 +48,7 @@
 
 namespace {
     uint8_t char2segments(char c) {
-        switch (c) {
+        switch (static_cast<char>(std::toupper(static_cast<unsigned char>(c)))) {
             case '_' : return 0x08;
             case '^' : return 0x01; // ¯
             case '-' : return 0x40;
@@ -60,7 +61,7 @@ namespace {
             case 'E' : return 0x79;
             case 'F' : return 0x71;
             case 'G' : return 0x35;
-            case 'H' : return 0x76; // upper case, instead lower 0x74
+            case 'H' : return 0x76; // lower case h
             case 'I' : return 0x06; // right align, instead left 0x30
             case 'J' : return 0x1e;
             case 'K' : return 0x75;
@@ -69,16 +70,16 @@ namespace {
             case 'N' : return 0x54; // lower case n
             case 'O' : return 0x5c; // lower case o
             case 'P' : return 0x73;
-            case 'Q' : return 0x67; // lower case q, unconfirmed
+            case 'Q' : return 0x67; // lower case q
             case 'R' : return 0x50; // lower case r
             case 'S' : return 0x6d;
             case 'T' : return 0x78; // lower case t
             case 'U' : return 0x1c; // lower case u
             case 'V' : return 0x3e; // twice tall u
             case 'W' : return 0x2a;
-            case 'X' : return 0x76;               // unconfirmed
+            case 'X' : return 0x76; // upper case h
             case 'Y' : return 0x6e; // lower case y
-            case 'Z' : return 0x1b;               // unconfirmed
+            case 'Z' : return 0x1b;
         }
         return 0;
     }
