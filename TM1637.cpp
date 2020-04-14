@@ -9,7 +9,7 @@
     Website    : www.seeed.cc
     Author     : Frankie.Chu
     Create Time: 9 April,2012
-    Change Log :
+    Change Log : 14 April,2020 - KORG style alphabets
 
     The MIT License (MIT)
 
@@ -34,7 +34,6 @@
 
 #include "TM1637.h"
 #include <Arduino.h>
-#include <cctype>
 
 //  --0x01--
 // |        |
@@ -56,55 +55,55 @@ namespace {
             case ' ' : return 0x00; // space
             case 'A' : return 0x77; // upper case A
             case 'a' : return 0x5f; // lower case a
-            case 'B' :
+            case 'B' :              // lower case b
             case 'b' : return 0x7c; // lower case b
             case 'C' : return 0x39; // upper case C
             case 'c' : return 0x58; // lower case c
-            case 'D' :
+            case 'D' :              // lower case d
             case 'd' : return 0x5e; // lower case d
-            case 'E' :
+            case 'E' :              // upper case E
             case 'e' : return 0x79; // upper case E
-            case 'F' :
-            case 'f' : return 0x71;
-            case 'G' :
+            case 'F' :              // upper case F
+            case 'f' : return 0x71; // upper case F
+            case 'G' :              // upper case G
             case 'g' : return 0x35; // upper case G
             case 'H' : return 0x76; // upper case H
             case 'h' : return 0x74; // lower case h
-            case 'I' : return 0x06; // right align, instead left 0x30
-            case 'i' : return 0x04; // right align, instead left 0x10
+            case 'I' : return 0x06; // 1
+            case 'i' : return 0x04; // lower case i
             case 'J' : return 0x1e; // upper case J
             case 'j' : return 0x16; // lower case j
-            case 'K' :
-            case 'k' : return 0x75;
-            case 'L' :
+            case 'K' :              // upper case K
+            case 'k' : return 0x75; // upper case K
+            case 'L' :              // upper case L
             case 'l' : return 0x38; // upper case L
-            case 'M' :
+            case 'M' :              // twice tall n
             case 'm' : return 0x37; // twice tall ∩
-            case 'N' :
+            case 'N' :              // lower case n
             case 'n' : return 0x54; // lower case n
-            case 'O' :
+            case 'O' :              // lower case o
             case 'o' : return 0x5c; // lower case o
-            case 'P' :
-            case 'p' : return 0x73;
+            case 'P' :              // upper case P
+            case 'p' : return 0x73; // upper case P
             case 'Q' : return 0x7b; // upper case Q
             case 'q' : return 0x67; // lower case q
-            case 'R' :
+            case 'R' :              // lower case r
             case 'r' : return 0x50; // lower case r
-            case 'S' :
+            case 'S' :              // 5
             case 's' : return 0x6d; // 5
-            case 'T' :
+            case 'T' :              // lower case t
             case 't' : return 0x78; // lower case t
-            case 'U' :
+            case 'U' :              // lower case u
             case 'u' : return 0x1c; // lower case u
-            case 'V' :
+            case 'V' :              // twice tall u
             case 'v' : return 0x3e; // twice tall u
             case 'W' : return 0x7e; // upside down A
-            case 'w' : return 0x2a; // lower case w
-            case 'X' :
+            case 'w' : return 0x2a; // separated w
+            case 'X' :              // upper case H
             case 'x' : return 0x76; // upper case H
-            case 'Y' :
+            case 'Y' :              // lower case y
             case 'y' : return 0x6e; // lower case y
-            case 'Z' :
+            case 'Z' :              // separated Z
             case 'z' : return 0x1b; // separated Z
         }
         return 0;
