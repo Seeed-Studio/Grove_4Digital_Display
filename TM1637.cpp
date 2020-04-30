@@ -227,7 +227,7 @@ void TM1637::displayNum(float num, int decimal, bool show_minus) {
     // Colon is used instead of decimal point if decimal == 2
     // Be aware of int size limitations (up to +-2^15 = +-32767)
 
-    int number = fabs(num) * pow(10, decimal);
+    int number = round(fabs(num) * pow(10, decimal));
 
     for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i) {
         int j = DIGITS - i - 1;
