@@ -253,21 +253,33 @@ void TM1637::displayNum(float num, int decimal, bool show_minus) {
 }
 
 void TM1637::displayStr(char str[], uint16_t loop_delay) {
-    for (int i = 0; i < strlen(str); i++) {
-        if (i + 1 > DIGITS) {
-            delay(loop_delay); //loop delay
-            for (int d = 0; d < DIGITS; d++) {
-                display(d, str[d + i + 1 - DIGITS]); //loop display
-            }
-        } else {
-            display(i, str[i]);
+		int end = strlen(str);
+		if(end <= DIGITS){
+			for (int i = 0; i < DIGITS; i++) {
+				if(i<0 || i>=end){ // display nothing on the remaining display
+						display(i,0x7f);
+				}
+				else{
+        	display(i, str[i]);
         }
-    }
+    	}
+		}
+		else{
+			int offset=-DIGITS;
 
-    // display nothing
-    for (int i = strlen(str); i < DIGITS; i++) {
-        display(i, 0x7f);
-    }
+			for (int i = 0; i <= end+DIGITS; i++) {
+				for (int j = offset, k=0; j < DIGITS+offset; j++,k++) {
+					if(j<0 || j>=end){
+						display(k,0x7f);
+					}
+					else{
+        		display(k, str[j]);
+        	}
+    		}
+    		offset++;
+    		delay(loop_delay); //loop delay
+			}
+		}
 }
 
 void TM1637::clearDisplay(void) {
