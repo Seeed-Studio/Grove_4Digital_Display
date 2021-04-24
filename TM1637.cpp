@@ -229,6 +229,12 @@ void TM1637::displayNum(float num, int decimal, bool show_minus) {
 
     int number = round(fabs(num) * pow(10, decimal));
 
+    if (decimal == 2) {
+        point(true);
+    } else {
+        point(false);
+    }
+
     for (int i = 0; i < DIGITS - (show_minus && num < 0 ? 1 : 0); ++i) {
         int j = DIGITS - i - 1;
 
@@ -243,12 +249,6 @@ void TM1637::displayNum(float num, int decimal, bool show_minus) {
 
     if (show_minus && num < 0) {
         display(0, '-');    // Display '-'
-    }
-
-    if (decimal == 2) {
-        point(true);
-    } else {
-        point(false);
     }
 }
 
