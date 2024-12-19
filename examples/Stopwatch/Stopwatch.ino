@@ -40,7 +40,13 @@
 
 #include <EEPROM.h>
 #include <TimerOne.h>
+
+#ifdef ESP32
+#include <pgmspace.h>
+#else
 #include <avr/pgmspace.h>
+#endif  // ifdef ESP32
+
 #include "TM1637.h"
 #define ON 1
 #define OFF 0
